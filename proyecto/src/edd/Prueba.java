@@ -1,12 +1,11 @@
 
-package icc;
+package edd;
 
 import java.util.Scanner;
-import icc.colors.Colors;
-import icc.modelo.*;
-import icc.simulador.*;
-import icc.io.*;
-import icc.exceptions.*;
+import edd.colors.Colors;
+import edd.estructuras;
+import edd.modelo.*;
+import edd.simulador.*;
 
 /**
  * Clase principal, incluye a la interfaz y llama a las clases de la gestión de
