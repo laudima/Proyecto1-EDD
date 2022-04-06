@@ -1,4 +1,4 @@
-package edd.src.Estructuras;
+package edd.estructuras;
 
 import java.util.NoSuchElementException;
 
@@ -19,7 +19,7 @@ public abstract class PushPop<T> {
 
     public abstract void push(T elemento);
 
-    // Eliminar al inicio. 
+    // Eliminar al inicio.
     public T pop(){
         if (longi == 0 || cabeza == null) {
             throw new NoSuchElementException("");
@@ -42,11 +42,11 @@ public abstract class PushPop<T> {
             throw new NoSuchElementException("");
         }
         return cabeza.elemento;
-    } 
+    }
 
     /**
      * Regresa el número de elementos en la estructura.
-     * 
+     *
      * @return el número de elementos en la estructura.
      */
     public int size() {
@@ -55,7 +55,7 @@ public abstract class PushPop<T> {
 
     /**
      * Vacía la estructura.
-     * 
+     *
      */
     public void empty() {
         cabeza = ultimo = null;
@@ -64,7 +64,7 @@ public abstract class PushPop<T> {
 
     /**
      * Nos dice si la estructura es vacía.
-     * 
+     *
      * @return <code>true</code> si la estructura es vacía, <code>false</code> en
      *         otro caso.
      */
@@ -74,11 +74,11 @@ public abstract class PushPop<T> {
 
     /**
      * Regresa un clon de la estructura.
-     * 
+     *
      * @return un clon de la estructura.
      */
     public abstract PushPop<T> clone() ;
-    
+
     public abstract String toString() ;
 
     @Override public boolean equals(Object o) {
@@ -99,10 +99,10 @@ public abstract class PushPop<T> {
         while (aux1!=null && aux2 != null) {
             if (!aux1.elemento.equals(aux2.elemento)) {
                 return false;
-            } 
+            }
             aux1 = aux1.siguiente;
             aux2 = aux2.siguiente;
-        }  
+        }
         return true;
     }
 

@@ -1,4 +1,4 @@
-package edd.src.Estructuras;
+package edd.estructuras;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

@@ -1,4 +1,4 @@
-package edd.src.Estructuras;
+package edd.estructuras;
 import java.lang.Math;
 
 public class Practica2 {
@@ -182,7 +182,7 @@ public class Practica2 {
     }
 
     /**Método para imprmir de forma concatenada los elementos de una cola
-    * @param Cola<Integer> cola - cola a imprimir. 
+    * @param Cola<Integer> cola - cola a imprimir.
     */
     private static void ImprimeConcat(Cola<Integer> cola){
         String imprime_cola="";

@@ -1,4 +1,4 @@
-package edd.src.Estructuras;
+package edd.estructuras;
 
 public class Cola<T> extends PushPop<T>{
 

@@ -1,4 +1,4 @@
-package edd.src.Estructuras;
+package edd.estructuras;
 
 public class Pila<T> extends PushPop<T>{
 
