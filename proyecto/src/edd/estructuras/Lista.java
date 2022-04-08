@@ -481,4 +481,29 @@ public class Lista<T> implements Collection<T> {
     public IteradorLista<T> iteradorLista() {
         return new Iterador();
     }
+
+    public void delete_index(int index){
+        int i = 0;
+        Nodo n_aux = cabeza;
+        while(i!=index){
+            n_aux = n_aux.siguiente;
+            i++;
+        }
+        if(longi == 1){
+            empty();
+        }
+        if (i == 0) {
+            cabeza = cabeza.siguiente;
+            cabeza.anterior = null;
+            longi --;
+        }
+        if (i == longi-1) {
+            ultimo = ultimo.anterior;
+            ultimo.siguiente = null;
+            longi --;
+        }
+        n_aux.siguiente.anterior = n_aux.anterior;
+        n_aux.anterior.siguiente = n_aux.siguiente;
+        longi --;
+    }
 }

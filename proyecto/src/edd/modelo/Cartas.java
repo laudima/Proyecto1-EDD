@@ -23,4 +23,14 @@ public class Cartas{
         sb.append(Colors.RESTORE);
         return sb.toString();
     }
+
+    public String toString_palo(){
+        StringBuilder sb = new StringBuilder();
+
+        //sb.append(Colors.HIGH_INTENSITY);
+        sb.append(palo);
+        //sb.append(Colors.RESTORE);
+        return sb.toString();
+    }
+
 }

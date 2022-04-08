@@ -6,6 +6,7 @@ import edd.colors.Colors;
 import edd.modelo.*;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.plaf.synth.SynthStyleFactory; // BUeno se intentó :(
 
 
 public class Ronda{
@@ -31,7 +32,7 @@ public class Ronda{
     public Ronda(int n){
 
         total_jugadores = n;
-        ronda_actual = 6;
+        ronda_actual = 9;
         truco_actual = 0;
 
         SetJugadores();
@@ -65,7 +66,7 @@ public class Ronda{
             baraja[i] = new Cartas((i%13)+1,'G');
         }
         for(int i=26; i<39;i++){
-            baraja[i] = new Cartas((i%13)+1,'B');
+            baraja[i] = new Cartas((i%13)+1,'P');
         }
         for(int i=39; i<52;i++){
             baraja[i] = new Cartas((i%13)+1,'A');
@@ -78,14 +79,14 @@ public class Ronda{
         }
     }
 
-    public void SetManos(Lista<Cartas> baraja_mezcla){
+    public void SetManos(Lista<Cartas> baraja){
         Lista<Cartas> mano = new Lista<Cartas>();
         int index;
         for(int j=0; j<total_jugadores; j++){
             for(int i=0; i<=trucos;i++){
-                index = random.nextInt(baraja_mezcla.size());
-                mano.add(baraja_mezcla.get(index));
-                baraja_mezcla.delete(baraja[index]);
+                index = random.nextInt(baraja.size());
+                mano.add(baraja.get(index));
+                baraja.delete(baraja.get(index));
             }
             System.out.println(mano);
             System.out.println("---------------");
@@ -97,9 +98,15 @@ public class Ronda{
     public void EmpiezaTurno(){
 
         Lista<Cartas> baraja_mezcla = new Lista<Cartas>();
+        String triunfo_actual;
 
         empieza = ronda_actual%total_jugadores;
         barajeador = (ronda_actual%total_jugadores)+1;
+        jugadores[empieza].set_Turno(0);
+
+        for(int i =0; i<total_jugadores;i++){
+            jugadores[(empieza+i)%total_jugadores].set_Turno(i);
+        }
 
         Colors.println("Ronda " + (ronda_actual+1), Colors.HIGH_INTENSITY);
 
@@ -109,25 +116,31 @@ public class Ronda{
         baraja_mezcla = MezclaBaraja();
         SetManos(baraja_mezcla);
 
+        Colors.println("Ahora se tomará una carta extra para determinar el palo del triunfo.", Colors.HIGH_INTENSITY);
+        triunfo_actual = PaloTriunfo(baraja_mezcla);
+
+
+
         Colors.println("Empieza el jugador " + empieza, Colors.HIGH_INTENSITY);
         Colors.println("Aquí estan tus cartas: ", Colors.HIGH_INTENSITY);
-
         jugadores[empieza].PrintMano();
-
-        // TiraJugador(jugadores[empieza].)
+        
+        
+        //Para más al ratón vaquero:
+        //System.out.println();
+        //Colors.println("Jugador " + empieza +" por favor selecciona la carta con la que jugarás...", Colors.HIGH_INTENSITY);
+        //System.out.println();
+        //TiraJugador(empieza);
 
     }
 
-    // public void TiraJugador(Jugador jugador){
-    //     String menu, error;
-    //     int opcion;
-    //
-    //     /*Mensaje del menú*/
-    //     menu = "Escoge la posicion de la carta que quieres tirar: ";
-    //     error = "Por favor ingresa una opcion valida.";
-    //
-    //     opcion = getInt(menu,error,0,(jugador.GetMano()).size());
-    // }
+    public void TiraJugador(int index_jugador){
+        String mensaje="Buena elección...Supongo.";
+        String error="No seas tramposx! Elige una carta válida o muere en el castigo del loop infinito!";
+        int min=1, max = jugadores[index_jugador].tamano_mano();
+
+        int eleccion = getInt(mensaje, error, min, max);
+    }
 
     public Lista<Cartas> MezclaBaraja(){
         Lista<Cartas> baraja_mezcla = new Lista<Cartas>();
@@ -138,11 +151,40 @@ public class Ronda{
         return baraja_mezcla;
     }
 
-    public void PaloTriunfo(){
-
-    }
-    public void Barajear(){
-
+    public String PaloTriunfo(Lista<Cartas> baraja){
+        String triunfo;
+        if(!baraja.isEmpty()){
+            int index = random.nextInt(baraja.size());
+            System.out.println(index); //BORRAR
+            triunfo = baraja.get(index).toString_palo();
+            //Colors.println("El palo del triunfo para este truco será: " + triunfo, Colors.HIGH_INTENSITY);
+            System.out.println("");
+            baraja.delete(baraja.get(index));
+            System.out.println(baraja.size());
+            switch (triunfo){
+                case "w": //Me salió mago el wey
+                Colors.println("Barajeador (vaya nombre tan desafortunado), la suerte está de tu lado, por favor escribe qué palo deseas que sea el palo del triunfo...", Colors.HIGH_INTENSITY);
+                //set_palo(); TODAVÍA NO IMPLEMENTO ESTA FUNCIÓN LOL
+                break;
+                case "B": //El bromas
+                Colors.println("Bufón: Lo siento, durante esta ronda no habrá palo del triunfo...", Colors.HIGH_INTENSITY);
+                break;
+                case "R":
+                Colors.println("El palo del triunfo es R... De Rosalía", Colors.HIGH_INTENSITY);
+                break;
+                case "G":
+                Colors.println("El palo del triunfo es G... De GUAPA", Colors.HIGH_INTENSITY);
+                break;
+                case "P":
+                Colors.println("El palo del triunfo es P... De Patrona", Colors.HIGH_INTENSITY);
+                break;
+            }
+        }else{
+            Colors.println("Se han terminado las cartas así que no habrá palo del triunfo", Colors.HIGH_INTENSITY);
+            triunfo = null;
+        }
+        
+        return triunfo;
     }
 
     public static int getInt(String mensaje, String error, int min, int max) {

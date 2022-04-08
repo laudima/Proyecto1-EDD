@@ -11,6 +11,7 @@ public class Jugadores {
     protected int puntos;
     protected int apuesta;
     protected int ganados;
+    protected int turno;
     protected Lista<Cartas> mano;
 
     public Jugadores(int Id){
@@ -19,6 +20,7 @@ public class Jugadores {
         puntos = 0;
         ganados = 0;
         apuesta = 0;
+        turno = 0;
         Lista<Cartas> mano = new Lista<Cartas>();
     }
 
@@ -60,5 +62,14 @@ public class Jugadores {
 
     public int GetId(){
         return id;
+    }
+
+    public int tamano_mano(){
+        return mano.size();
+    }
+
+    public int set_Turno(int turno){
+        this.turno = turno;
+        return turno;
     }
 }
