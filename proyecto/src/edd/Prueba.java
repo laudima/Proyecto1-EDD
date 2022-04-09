@@ -8,8 +8,9 @@ import edd.modelo.*;
 import edd.simulador.*;
 
 /**
- * Clase principal, incluye a la interfaz y llma a las clases del simulador
+ * Clase principal, incluye a la interfaz y llma a las clases del simulador Wizard
  * @author Laura Itzel Rodríguez Dimayuga
+ * @author Anshar Dominguez
  * @version Apr 2022
  */
 public class Prueba {
@@ -45,16 +46,17 @@ public class Prueba {
     public static void main(String args[]) {
         Scanner scn = new Scanner(System.in);
 
-        System.out.println("Bienvenido al simulador de Wizard");
         String menu, error;
         int opcion;
 
+        Colors.println("Bienvenido al simulador de Wizard", Colors.HIGH_INTENSITY);
+
         /*Mensaje del menú*/
-        menu = "Ingresa la cantidad de personas a jugar:";
+        menu = Colors.HIGH_INTENSITY + "Ingresa la cantidad de personas a jugar:" + Colors.RESTORE;
         error = "Por favor ingresa una opcion valida.";
 
         opcion = getInt(menu,error,3,6);
 
-        Ronda torneo = new Ronda(opcion);
+        Wizard torneo = new Wizard(opcion);
     }
 }

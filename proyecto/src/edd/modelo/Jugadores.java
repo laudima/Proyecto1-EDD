@@ -12,6 +12,7 @@ public class Jugadores {
     protected int apuesta;
     protected int ganados;
     protected int turno;
+    protected Cartas carta_turno;
     protected Lista<Cartas> mano;
 
     public Jugadores(int Id){
@@ -60,16 +61,34 @@ public class Jugadores {
         return nombre;
     }
 
+    public int GetApuesta(){
+        return apuesta;
+    }
+
     public int GetId(){
         return id;
     }
-
-    public int tamano_mano(){
-        return mano.size();
-    }
-
-    public int set_Turno(int turno){
+    
+    public int SetTurno(int turno){
         this.turno = turno;
         return turno;
+    }
+
+    public boolean hasPaloLider(String triunfo){
+        for(int i=0; i<mano.size(); i++){
+            String palo = mano.get(i).GetPalo();
+            if(palo.equals(triunfo)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void SetCartaTurno(Cartas turno){
+        this.carta_turno = turno;
+    }
+
+    public Cartas GetCartaTurno(){
+        return carta_turno;
     }
 }
