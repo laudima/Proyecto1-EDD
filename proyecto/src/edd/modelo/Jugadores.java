@@ -8,9 +8,9 @@ public class Jugadores {
 
     protected String nombre;
     protected int id;
-    protected int puntos;
+    protected int puntos = 0;
     protected int apuesta;
-    protected int ganados;
+    protected int ganados = 0;
     protected int turno;
     protected Cartas carta_turno;
     protected Lista<Cartas> mano;
@@ -25,16 +25,12 @@ public class Jugadores {
         Lista<Cartas> mano = new Lista<Cartas>();
     }
 
-    public void SetPuntos(){
-        if(ganados == apuesta){
-            puntos += 20 + 10*apuesta;
-        }else{
-            puntos += -10 * Math.abs(ganados-apuesta);
-        }
-    }
-
     public void SetGanados(int ganados){
         this.ganados = ganados;
+    }
+
+    public void AumentaGanados(){
+        this.ganados++;
     }
 
     public void SetApuesta(int apuesta){
@@ -43,6 +39,10 @@ public class Jugadores {
 
     public void SetMano(Lista<Cartas> mano){
          this.mano = mano.clone();
+    }
+
+    public void SetPuntos(int puntaje){
+        this.puntos+=puntaje;
     }
 
     public void PrintMano(){
@@ -90,5 +90,13 @@ public class Jugadores {
 
     public Cartas GetCartaTurno(){
         return carta_turno;
+    }
+
+    public int GetTurno(){
+        return turno;
+    }
+
+    public int GetGanados(){
+        return ganados;
     }
 }

@@ -81,7 +81,7 @@ public class Wizard{
     * Método para Inicializar a la baraja .
     * 13 cartas de palo R (Rojo)
     * 13 cartas de palo G (Verde)
-    * 13 cartas de palo P (Azul)
+    * 13 cartas de palo P (Azul) jaja P de plue, azul en francés obvio
     * 13 cartas de palo A (Amarillo)
     * 4 Magos y 4 Bufones
     */
@@ -262,7 +262,7 @@ public class Wizard{
     * hagan sus apuestas, hace todos los trucos de la ronda y al final da el puntaje.
     */
     public void EmpiezaRonda(){
-
+        
         Colors.println("Ronda " + (ronda_actual+1), Colors.HIGH_INTENSITY);
 
         EmpiezaTruco();
@@ -270,6 +270,8 @@ public class Wizard{
         for(int i=0; i<total_jugadores; i++){
             Colors.println("Jugador " + i, Colors.HIGH_INTENSITY);
             SetApuesta(i);
+            jugadores[i].SetGanados(0);
+
         }
         ImprimeApuesta();
 
@@ -289,14 +291,14 @@ public class Wizard{
             for(int j=0; j<total_jugadores; j++){
                 TiraJugador((empieza+j)%total_jugadores);
             }
-            //empieza = GanadorTruco(); FALTA
-            GanadorTruco();
+            empieza = GanadorTruco();
             lider="";
             empieza = (empieza+1)%total_jugadores;
             truco_actual++;
+            jugadores[empieza].AumentaGanados();
         }
     }
-    /**
+    /**                            
     * Método para que un jugador pueda tirar una carta en su turno.
     * @param index_jugador - jugador que va a tirar una carta.
     */
@@ -382,22 +384,127 @@ public class Wizard{
     }
 
     /**
-    * FALTA
+    * Determina cuál es el jugador que ganó el truco. 
+    * Se hace una comparación tomando las siguientes consideraciones en órden:
+    *1- El primer jugador en haber lanzado un mago
+    *2- El jugador con el número más alto de una carta de palo del triunfo
+    *3- El jugador con el número más alto de una carta de palo lider
+    *4- El primer jugador en haber lanzado un bufón
+    * @return int ganador
     */
-    public void GanadorTruco(){
-        Colors.println("El ganador es: ", Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
+    public int GanadorTruco(){
+        int ganador_porTurno = 1000;
+        int ganador_porPalo = -1;
+        int ganador = -1;
+        boolean hay_mago = false;
+        boolean hay_triunfo = false;
+        boolean hay_lider = false;
+        boolean hay_bufon = false;
+        Lista<Cartas> jugadas = new Lista<>();
+
+        for (int i=0; i<total_jugadores;i++){
+         jugadas.add(jugadores[i].GetCartaTurno());   
+        }
+
+        for (int i=0; i<total_jugadores;i++){
+            Cartas actual = jugadores[i].GetCartaTurno();
+            String palo_actual = actual.GetPalo();
+            jugadas.insert(jugadores[i].GetTurno(), actual);
+            if(palo_actual == "W"){
+                hay_mago = true;
+            }
+            if(palo_actual == triunfo){
+                hay_triunfo = true;
+            }
+            if(palo_actual == lider){
+                hay_lider = true;
+            }
+            if(palo_actual == "B"){
+                hay_bufon = true;
+            }
+        }
+        
+        for(int i=0; i<total_jugadores; i++){
+            if (hay_mago){
+                if (jugadas.get(i).GetPalo() == "W"){
+                    ganador_porTurno = Math.min(ganador_porTurno, i);
+                }
+            }
+            else if (!hay_mago && hay_triunfo){
+                if (jugadas.get(i).GetPalo() == triunfo){
+                    if(jugadas.get(i).GetNumero() > ganador_porPalo){
+                        ganador_porTurno = i;
+                        ganador_porPalo = jugadas.get(i).GetNumero();
+                    }
+                }
+            }
+            else if (!hay_mago && !hay_triunfo && hay_lider){
+                if (jugadas.get(i).GetPalo() == lider){
+                    if(jugadas.get(i).GetNumero() > ganador_porPalo){
+                        ganador_porTurno = i;
+                        ganador_porPalo = jugadas.get(i).GetNumero();
+                    }
+                }
+            }
+            else if (!hay_mago && !hay_triunfo && !hay_lider && hay_bufon){
+                if (jugadas.get(i).GetPalo() == "B"){
+                    ganador_porTurno = Math.min(ganador_porTurno, i);
+                }
+            }
+            else if(!hay_mago && !hay_triunfo && !hay_lider && !hay_bufon){
+                if(jugadas.get(i).GetNumero() > ganador_porPalo){
+                    ganador_porTurno = i;
+                    ganador_porPalo = jugadas.get(i).GetNumero();
+                }
+            }
+        }
+        
+        for(int i=0; i<total_jugadores; i++){
+            if(ganador_porTurno == jugadores[i].GetTurno()){
+                ganador = jugadores[i].GetId();
+            }
+        }
+        Colors.println("El ganador es: el jugador " + ganador, Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
+        return ganador;
     }
+
     /**
-    * FALTA
+     * Método que calcula y muestra los puntajes por ronda siguiendo el siguiente parámetro:
+    * Si a=t entonces p=20+10t
+    * Si a!=t entonces p=-10|a-t|
+    * Donde a = apuestas, t=ganados en la ronda y p = puntaje obtenido
     */
     public void PuntajeRonda(){
         Colors.println("Estos son los puntajes de la ronda: ", Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
+        for(int i = 0; i<total_jugadores; i++){
+            if(jugadores[i].GetGanados() == jugadores[i].GetApuesta()){
+                int puntaje;
+                puntaje = 20+(10*(jugadores[i].GetGanados()));
+                Colors.println("Jugador "+jugadores[i].GetId()+": "+ puntaje, Colors.BGD_GREEN + Colors.BLUE + Colors.HIGH_INTENSITY);
+                jugadores[i].SetPuntos(puntaje);
+            }else{
+                int puntaje;
+                puntaje = -10*(Math.abs(jugadores[i].GetApuesta()-jugadores[i].GetGanados()));
+                Colors.println("Jugador "+jugadores[i].GetId()+": "+ puntaje, Colors.BGD_GREEN + Colors.RED + Colors.HIGH_INTENSITY);
+            }       
+        }
+        System.out.println(" ");
     }
+
+
     /**
-    * FALTA
+    * Método que anuncia al ganador y se despide de los usuarios.
     */
     public void Despedida(){
-        Colors.println("El ganador final es : ", Colors.YELLOW + Colors.HIGH_INTENSITY);
+        int ganador = 0;
+        for (int i = 1; i<total_jugadores; i++){
+            if (jugadores[ganador].GetPuntos()<jugadores[i].GetPuntos()){
+                ganador = i;
+            }
+        }
+        Colors.println("El ganador final es : Jugador "+ganador, Colors.YELLOW + Colors.HIGH_INTENSITY);
+        Colors.println("Felicidades, parece que eres el/la mismísimo A de ALFA", Colors.BLUE + Colors.HIGH_INTENSITY);
+        
     }
 
     /**
