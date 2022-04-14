@@ -524,9 +524,13 @@ public class Wizard{
             if (scn.hasNextInt()) {
                 val = scn.nextInt();
                 // (-infinito, min) || (max, infinito)
-                if (val < min || max < val) {
+                if ((val < min || max < val) && val!=-1) {
                     System.out.println(error);
-                } else {
+                }else if(val == -1){
+                    System.out.println("Ahhhh así que has decidido ser un aguafiestas, adíos...");
+                    System.exit(0);
+                }
+                 else {
                     return val;
                 }
             } else {

@@ -31,9 +31,13 @@ public class Prueba {
             if (scn.hasNextInt()) {
                 val = scn.nextInt();
                 // (-infinito, min) || (max, infinito)
-                if (val < min || max < val) {
+                if ((val < min || max < val) && val!=-1) {
                     System.out.println(error);
-                } else {
+                }else if(val == -1){
+                    System.out.println("Ahhhh así que has decidido ser un aguafiestas, adíos...");
+                    System.exit(0);
+                }
+                else {
                     return val;
                 }
             } else {
@@ -50,6 +54,7 @@ public class Prueba {
         int opcion;
 
         Colors.println("Bienvenido al simulador de Wizard", Colors.HIGH_INTENSITY);
+        Colors.println("Puedes salir en cualquier momento tecleando -1 y apretando enter", Colors.HIGH_INTENSITY);
 
         /*Mensaje del menú*/
         menu = Colors.HIGH_INTENSITY + "Ingresa la cantidad de personas a jugar:" + Colors.RESTORE;
