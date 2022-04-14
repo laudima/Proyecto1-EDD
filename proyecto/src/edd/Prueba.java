@@ -54,7 +54,7 @@ public class Prueba {
         int opcion;
 
         Colors.println("Bienvenido al simulador de Wizard", Colors.HIGH_INTENSITY);
-        Colors.println("Puedes salir en cualquier momento tecleando -1 y apretando enter", Colors.HIGH_INTENSITY);
+        Colors.println("Puedes ver el menu en cualquier momento tecleando -1 y apretando enter", Colors.HIGH_INTENSITY);
 
         /*Mensaje del menú*/
         menu = Colors.HIGH_INTENSITY + "Ingresa la cantidad de personas a jugar:" + Colors.RESTORE;
