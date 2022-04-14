@@ -2,6 +2,12 @@ package edd.modelo;
 
 import edd.colors.Colors;
 
+/**
+ * Clase de modelo de las cartas
+ * @author Laura Itzel Rodríguez Dimayuga
+ * @author Anshar Dominguef
+ * @version Apr 2022
+ */
 public class Cartas{
 
     protected int numero;
@@ -26,7 +32,7 @@ public class Cartas{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(color);
         sb.append(Colors.HIGH_INTENSITY);
         sb.append(numero + " " + palo);

@@ -8,7 +8,12 @@ import java.util.Random;
 import java.util.Scanner;
 import javax.swing.plaf.synth.SynthStyleFactory; // BUeno se intentó :(
 
-
+/**
+ * Clase de simulacion del juego Wizard
+ * @author Laura Itzel Rodríguez Dimayuga
+ * @author Anshar Dominguef
+ * @version Apr 2022
+ */
 public class Wizard{
 
     protected Jugadores[] jugadores; //jugadores de la partida
@@ -23,6 +28,7 @@ public class Wizard{
 
     /*Lista de cartas que se jugaron en un turno*/
     protected Lista<Cartas> juego = new Lista<Cartas>();
+    protected Lista<Integer> ganadores_truco = new Lista<Integer>();
 
     protected int ronda_actual;
     protected int truco_actual;
@@ -262,7 +268,7 @@ public class Wizard{
     * hagan sus apuestas, hace todos los trucos de la ronda y al final da el puntaje.
     */
     public void EmpiezaRonda(){
-        
+
         Colors.println("Ronda " + (ronda_actual+1), Colors.HIGH_INTENSITY);
 
         EmpiezaTruco();
@@ -277,7 +283,7 @@ public class Wizard{
 
         Trucos();
         truco_actual=0;
-        PuntajeRonda();
+        ganadores_truco.empty();
     }
 
     /**
@@ -293,12 +299,13 @@ public class Wizard{
             }
             empieza = GanadorTruco();
             lider="";
-            empieza = (empieza+1)%total_jugadores;
             truco_actual++;
             jugadores[empieza].AumentaGanados();
+            PuntajeTruco();
+            Menu();
         }
     }
-    /**                            
+    /**
     * Método para que un jugador pueda tirar una carta en su turno.
     * @param index_jugador - jugador que va a tirar una carta.
     */
@@ -372,7 +379,7 @@ public class Wizard{
         jugadores[index_jugador].SetApuesta(apuesta);
     }
     /**
-    * Método para imprimir las apuuestas iniciales de todos los juagdores.
+    * Método para imprimir las apuestas iniciales de todos los juagdores.
     */
     public void ImprimeApuesta(){
         Colors.println("Asi quedaron las apuestas", Colors.HIGH_INTENSITY);
@@ -384,7 +391,43 @@ public class Wizard{
     }
 
     /**
-    * Determina cuál es el jugador que ganó el truco. 
+    * Método para imprimir las cartas que se jugaron en un truco
+    */
+    public void ImprimeCartas(){
+        Colors.println("Asi quedaron las cartas de la ronda", Colors.HIGH_INTENSITY);
+        System.out.println("------------------------------------------------");
+        for(int i=0; i<total_jugadores;i++){
+            System.out.println("Jugador " + i + ":" + "\t" + jugadores[i].GetCartaTurno());
+        }
+        System.out.println("------------------------------------------------");
+    }
+
+    /**
+    * Método para imprimir los puntajes hasta el momento en el juego
+    */
+    public void ImprimePuntaje(){
+        Colors.println("Estos son los puntajes", Colors.HIGH_INTENSITY);
+        System.out.println("------------------------------------------------");
+        for(int i=0; i<total_jugadores;i++){
+            System.out.println("Jugador " + i + ":" + "\t" + jugadores[i].GetPuntos());
+        }
+        System.out.println("------------------------------------------------");
+    }
+
+    /**
+    * Método para imprimir el ganador de cada truco en una ronda
+    */
+    public void ImprimeGanadorTruco(){
+        Colors.println("Estos son los ganadores hasta el momento", Colors.HIGH_INTENSITY);
+        System.out.println("------------------------------------------------");
+        for(int i=0; i<ganadores_truco.size();i++){
+            System.out.println("Truco " + (i+1) + ":" + "\t" + "Jugador " + ganadores_truco.get(i));
+        }
+        System.out.println("------------------------------------------------");
+    }
+
+    /**
+    * Determina cuál es el jugador que ganó el truco.
     * Se hace una comparación tomando las siguientes consideraciones en órden:
     *1- El primer jugador en haber lanzado un mago
     *2- El jugador con el número más alto de una carta de palo del triunfo
@@ -403,7 +446,7 @@ public class Wizard{
         Lista<Cartas> jugadas = new Lista<>();
 
         for (int i=0; i<total_jugadores;i++){
-         jugadas.add(jugadores[i].GetCartaTurno());   
+         jugadas.add(jugadores[i].GetCartaTurno());
         }
 
         for (int i=0; i<total_jugadores;i++){
@@ -423,7 +466,7 @@ public class Wizard{
                 hay_bufon = true;
             }
         }
-        
+
         for(int i=0; i<total_jugadores; i++){
             if (hay_mago){
                 if (jugadas.get(i).GetPalo() == "W"){
@@ -458,15 +501,17 @@ public class Wizard{
                 }
             }
         }
-        
+
         for(int i=0; i<total_jugadores; i++){
             if(ganador_porTurno == jugadores[i].GetTurno()){
                 ganador = jugadores[i].GetId();
             }
         }
         Colors.println("El ganador es: el jugador " + ganador, Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
+        ganadores_truco.add(ganador);
         return ganador;
     }
+
 
     /**
      * Método que calcula y muestra los puntajes por ronda siguiendo el siguiente parámetro:
@@ -474,23 +519,58 @@ public class Wizard{
     * Si a!=t entonces p=-10|a-t|
     * Donde a = apuestas, t=ganados en la ronda y p = puntaje obtenido
     */
-    public void PuntajeRonda(){
-        Colors.println("Estos son los puntajes de la ronda: ", Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
+    public void PuntajeTruco(){
+        Colors.println("Estos son los puntajes  que se obtuvieron de este truco: ", Colors.BGD_GREEN + Colors.YELLOW + Colors.HIGH_INTENSITY);
         for(int i = 0; i<total_jugadores; i++){
             if(jugadores[i].GetGanados() == jugadores[i].GetApuesta()){
                 int puntaje;
                 puntaje = 20+(10*(jugadores[i].GetGanados()));
-                Colors.println("Jugador "+jugadores[i].GetId()+": "+ puntaje, Colors.BGD_GREEN + Colors.BLUE + Colors.HIGH_INTENSITY);
+                Colors.println("Jugador "+ i +": "+ puntaje, Colors.BGD_GREEN + Colors.BLUE + Colors.HIGH_INTENSITY);
                 jugadores[i].SetPuntos(puntaje);
             }else{
                 int puntaje;
                 puntaje = -10*(Math.abs(jugadores[i].GetApuesta()-jugadores[i].GetGanados()));
-                Colors.println("Jugador "+jugadores[i].GetId()+": "+ puntaje, Colors.BGD_GREEN + Colors.RED + Colors.HIGH_INTENSITY);
-            }       
+                Colors.println("Jugador "+ i +": "+ puntaje, Colors.BGD_GREEN + Colors.RED + Colors.HIGH_INTENSITY);
+                jugadores[i].SetPuntos(puntaje);
+            }
         }
         System.out.println(" ");
     }
 
+    /**
+    * Muestra el palo del triunfo, las cartas que se jugaron en el truco,
+    * los ganadores por truco y las puntuaciones hasta el momento.
+    */
+    public void Historial(){
+        Colors.println("Resumen de la Ronda: " + (ronda_actual +1 ), Colors.HIGH_INTENSITY);
+        Colors.println("Palo Triunfo: " + triunfo, Colors.HIGH_INTENSITY);
+        ImprimeApuesta();
+        ImprimeCartas();
+        ImprimeGanadorTruco();
+        ImprimePuntaje();
+    }
+
+    /**
+    *Muestra una menu para continuar, salir o ver el historial
+    */
+    public void Menu(){
+        Colors.println("MENU ----------------------", Colors.HIGH_INTENSITY);
+        Colors.println("0. Continuar", Colors.HIGH_INTENSITY);
+        Colors.println("1. Salir", Colors.HIGH_INTENSITY);
+        Colors.println("2. Historial", Colors.HIGH_INTENSITY);
+
+        int opcion = getInt("Escribe tu eleccion","Opcion invalida",0,2);
+
+        switch(opcion){
+            case 1:
+            System.out.println("Ahhhh así que has decidido ser un aguafiestas, adíos...");
+            System.exit(0); break;
+            case 2:
+            Historial();
+            break;
+        }
+
+    }
 
     /**
     * Método que anuncia al ganador y se despide de los usuarios.
@@ -504,7 +584,7 @@ public class Wizard{
         }
         Colors.println("El ganador final es : Jugador "+ganador, Colors.YELLOW + Colors.HIGH_INTENSITY);
         Colors.println("Felicidades, parece que eres el/la mismísimo A de ALFA", Colors.BLUE + Colors.HIGH_INTENSITY);
-        
+
     }
 
     /**
@@ -515,7 +595,7 @@ public class Wizard{
     * @param min -La menor opcion valida
     * @param max -La opcion mas grande que podemos poner
     */
-    public static int getInt(String mensaje, String error, int min, int max) {
+    public int getInt(String mensaje, String error, int min, int max) {
         int val;
         Scanner scn = new Scanner(System.in);
 
@@ -527,10 +607,8 @@ public class Wizard{
                 if ((val < min || max < val) && val!=-1) {
                     System.out.println(error);
                 }else if(val == -1){
-                    System.out.println("Ahhhh así que has decidido ser un aguafiestas, adíos...");
-                    System.exit(0);
-                }
-                 else {
+                    Menu();
+                }else {
                     return val;
                 }
             } else {

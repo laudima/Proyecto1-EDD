@@ -4,6 +4,12 @@ import edd.estructuras.*;
 import java.lang.Math.*;
 import edd.modelo.*;
 
+/**
+ * Clase de modelo de los jugadores
+ * @author Laura Itzel Rodríguez Dimayuga
+ * @author Anshar Dominguef
+ * @version Apr 2022
+ */
 public class Jugadores {
 
     protected String nombre;
@@ -68,7 +74,7 @@ public class Jugadores {
     public int GetId(){
         return id;
     }
-    
+
     public int SetTurno(int turno){
         this.turno = turno;
         return turno;
