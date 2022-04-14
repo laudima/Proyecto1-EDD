@@ -23,7 +23,7 @@ public class Jugadores {
 
     public Jugadores(int Id){
         this.nombre = "Jugador " + Id;
-        this.id = id;
+        this.id = Id;
         puntos = 0;
         ganados = 0;
         apuesta = 0;
